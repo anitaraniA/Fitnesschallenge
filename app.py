@@ -41,15 +41,18 @@ if not st.session_state.logged_in:
     code = st.text_input("Enter Invite Code")
     name = st.text_input("Enter Your Name")
 
-    if st.button("Login"):
-        if code == INVITE_CODE and name.strip() != "":
+    login_clicked = st.button("Login")
+
+    if login_clicked:
+        if code.strip() == INVITE_CODE and name.strip() != "":
             st.session_state.logged_in = True
             st.session_state.name = name.strip().title()
             st.success(f"Welcome, {st.session_state.name}! 🎉")
+            # Instead of experimental_rerun here, show a message and stop
             st.experimental_rerun()
         else:
             st.error("Invalid code or name. Please try again.")
-    st.stop()
+    st.stop()  # Stop everything else from running until login
 
 # --- Main App ---
 st.title("🏃‍♀️ Daily Tracker")

@@ -18,7 +18,6 @@ if "data" not in st.session_state:
 
 # --- Helper functions ---
 def calculate_score(steps, calories):
-    """50% from steps (out of 12,000) + 50% from calories (out of 400)"""
     step_score = min(steps / 12000, 1)
     cal_score = min(calories / 400, 1)
     return round((step_score * 0.5 + cal_score * 0.5) * 100, 2)
@@ -41,22 +40,18 @@ if not st.session_state.logged_in:
     code = st.text_input("Enter Invite Code")
     name = st.text_input("Enter Your Name")
 
-    login_clicked = st.button("Login")
-
-    if login_clicked:
+    if st.button("Login"):
         if code.strip() == INVITE_CODE and name.strip() != "":
             st.session_state.logged_in = True
             st.session_state.name = name.strip().title()
             st.success(f"Welcome, {st.session_state.name}! 🎉")
-            # Instead of experimental_rerun here, show a message and stop
-            st.experimental_rerun()
         else:
             st.error("Invalid code or name. Please try again.")
-    st.stop()  # Stop everything else from running until login
+
+    st.stop()  # Prevent app from running before login
 
 # --- Main App ---
 st.title("🏃‍♀️ Daily Tracker")
-
 st.write(f"Welcome, **{st.session_state.name}**!")
 today = date.today()
 
@@ -79,7 +74,7 @@ if st.button("Submit Entry"):
         (st.session_state.data["Name"] == st.session_state.name) &
         (st.session_state.data["Date"] == today)
     )]
-    # Append new one
+    # Append new entry
     st.session_state.data = pd.concat([st.session_state.data, new_entry], ignore_index=True)
     st.success("Your entry has been saved!")
 
